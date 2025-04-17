@@ -1,0 +1,185 @@
+<!-- Weather Details Template for a given input Location -->
+
+{% extends '../base.html' %} 
+
+{% block title %} 
+The WeatherMan Project | {{ location }} 
+{% endblock title %} 
+
+{% block head %} 
+{% load static %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="{% static 'style/detail.css' %}"> 
+{% endblock head %} 
+
+{% block content %}
+<a href="{% url 'home' %}">
+    <div class="back-button mb-3" data-aos="fade-left">
+        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+        <p style="display: inline;">Check for another place</p>
+    </div>
+</a>
+
+<h4 class="text-muted" data-aos="fade-right">Location: {{ location }}</h4>
+
+<div class="jumbotron">
+    <h2 data-aos="fade-up" data-aos-delay="100">
+        <u>
+        TODAY'S WEATHER
+        </u>
+    </h2>
+    <br>
+    <div class="row" data-aos="fade-up" data-aos-delay="400">
+        <div class="col-lg-6">
+            <h3> Current Temperature: {{ curr_temp }} °C</h3>
+            <h3> Humidity: {{ curr_humidity }} %</h3>
+            <h3> Precipitation: {{ curr_precipitation }} mm</h3>
+        </div>
+        <div class="col-lg-6 curr-weather-col-2">
+            <img src="{{ curr_icon }}" alt=" Data Not Found">
+            <h3> Current Status: {{ curr_status }}</h3>
+        </div>
+    </div>
+</div>
+
+<div class="mt-5"></div>
+<h2 class="mt-4 mb-2" align="center" data-aos="fade-up" data-aos-delay="200">
+    <u>
+        FORECAST
+    </u>
+</h2>
+
+<div class="row pt-2 pb-2 pl-2 pr-2 forecast" align="center">
+    {% for data in forecast %}
+    <div class="card jumbotron pt-1 pb-2 pl-1 pr-1" data-aos="zoom-in" data-aos-delay="400">
+        <div class="card-body">
+            <h5 class="card-title"><u> {{ data.1 }} Forecast </u></h5>
+            <span>
+		        <img src="{{ data.0.4 }}" style="width: 50px" alt=" Data Not Found">
+	        </span>
+            <p> Maximum Temperature: {{ data.0.0 }} °C </p>
+            <p> Minimum Temperature: {{ data.0.1 }} °C </p>
+            <p> Humidity: {{ data.0.2 }} % </p>
+            <p> Precipitation: {{ data.0.3 }} mm </p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="mt-5"></div>
+<h2 class="mt-4 mb-2" align="center">
+    <u>
+        FORECAST CHARTS
+    </u>
+</h2>
+
+<h3 class="mb-4 mt-5" align="center" data-aos="fade-up">
+    <u>
+        Temperature Forecast
+    </u>
+</h3>
+<canvas id="tempChart" data-aos="zoom-in" data-aos-delay="400"></canvas>
+
+<h3 class="mb-4 mt-5" align="center" data-aos="fade-up">
+    <u>
+        Precipitation Forecast
+    </u>
+</h3>
+<canvas id="precipChart" data-aos="zoom-in" data-aos-delay="400"></canvas>
+
+<h3 class="mb-4 mt-5" align="center" data-aos="fade-up">
+    <u>
+        Humidity Forecast
+    </u>
+</h3>
+<canvas class="mb-2" id="humidChart" data-aos="zoom-in" data-aos-delay="400"></canvas>
+
+{% endblock content %} 
+
+{% block script %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+<script>
+    // TEMPERATURE GRAPH
+    var chart_temperature = document.getElementById('tempChart').getContext('2d');
+    var tempChart = new Chart(chart_temperature, {
+        type: 'line',
+        data: {
+            labels: {{ days | safe }},
+            datasets: [{
+                label: 'Maximum Temperature',
+                backgroundColor: 'rgba(255, 255, 255, 0)',
+                borderColor: 'rgba(255, 0, 0, 0.9)',
+                data: {{ temp_high | safe }}
+            }, {
+                label: 'Minimum Temperature',
+                backgroundColor: 'rgba(255, 255, 255, 0)',
+                borderColor: 'rgba(255, 150, 0, 0.9)',
+                data: {{ temp_low | safe }}
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        max: 50,
+                        min: 0,
+                        stepSize: 10
+                    }
+                }]
+            }
+        }
+    });
+
+    // PRECIPITATION GRAPH
+    var chart_precipitation = document.getElementById('precipChart').getContext('2d');
+    var precipChart = new Chart(chart_precipitation, {
+        type: 'line',
+        data: {
+            labels: {{ days | safe }},
+            datasets: [{
+                label: 'Precipitation',
+                backgroundColor: 'rgba(255, 255, 255, 0)',
+                borderColor: 'rgb(100, 100, 255)',
+                data: {{ precipitation | safe }}
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        max: 200,
+                        min: 0,
+                        stepSize: 40
+                    }
+                }]
+            }
+        }
+    });
+
+    // HUMIDITY GRAPH
+    var chart_humidity = document.getElementById('humidChart').getContext('2d');
+    var humidChart = new Chart(chart_humidity, {
+        type: 'line',
+        data: {
+            labels: {{ days | safe }},
+            datasets: [{
+                label: 'Humidity',
+                backgroundColor: 'rgba(255, 255, 255, 0)',
+                borderColor: 'rgba(0, 100, 0, 0.9)',
+                data: {{ humidity | safe }}
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        max: 100,
+                        min: 0,
+                        stepSize: 20
+                    }
+                }]
+            }
+        }
+    });
+</script>
+{% endblock script %}

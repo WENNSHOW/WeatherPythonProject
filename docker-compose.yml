@@ -1,0 +1,18 @@
+version: '3.9'
+
+services:
+  web:
+    build: .
+    container_name: yt_django
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      - sqlite_data:/app/db/
+    environment:
+      - PYTHONUNBUFFERED=1
+    depends_on: []
+    restart: always
+
+volumes:
+  sqlite_data:
