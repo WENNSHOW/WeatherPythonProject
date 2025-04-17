@@ -11,7 +11,7 @@ API_END_PT_CURRENT = "https://api.openweathermap.org/data/2.5/weather?lat={}&lon
 API_END_PT_FORECAST = "https://api.openweathermap.org/data/2.5/forecast?lat={}&lon={}&appid={}&units=metric"
 
 # Open Weather Maps API KEY
-API_KEY = "b54a56bab33328bae8c5172ab3e55fd6"
+API_KEY = "${key}"
 
 # Open Weather Maps Image URL (принимает код иконки)
 IMAGE_URL = "http://openweathermap.org/img/wn/{}@2x.png"
