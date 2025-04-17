@@ -31,7 +31,7 @@ The WeatherMan Project | Home
 {% endblock content %} 
 
 {% block script %}
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOVYRIgupAurZup5y1PRh8Ismb1A3lLao&libraries=places"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places"></script>
 <script>
     $(document).ready(function() {
         var autocomplete;
